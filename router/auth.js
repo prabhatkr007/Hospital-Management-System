@@ -9,9 +9,9 @@ require('../DB/conn');
 
 const User = require("../models/userSchema");
 
-router.get('/', (req, res) => {
-    res.send(`hello world from the server router js`);
-});
+// router.get('/', (req, res) => {
+//     res.send(`hello world from the server router js`);
+// });
 
 // Promise method
 
