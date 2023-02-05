@@ -118,11 +118,17 @@ router.post('/signin', async (req ,res) => {
 
 // about us ka page
 
-router.get('/about',authenticate,(req,res)=>{
+// router.get('/about',authenticate,(req,res)=>{
+//     res.send (req.rootUser);
+// });
+router.get('/about',(req,res)=>{
     res.send (req.rootUser);
 });
 
-router.get('/getdata',authenticate,(req,res)=>{
+// router.get('/getdata',authenticate,(req,res)=>{
+//     res.send (req.rootUser);
+// });
+router.get('/getdata',(req,res)=>{
     res.send (req.rootUser);
 });
 
