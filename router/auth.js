@@ -76,8 +76,8 @@ router.post('/register' , async (req, res) => {
 // Login route
 
 router.post('/signin', async (req ,res) => {
-    // console.log(req.body);
-    // res.json ({message: "awesome"});
+    console.log(req.body);
+    res.json ({message: "awesome"});
     try{
         const {email, password} = req.body;
         if(!email|| !password){
@@ -119,10 +119,14 @@ router.post('/signin', async (req ,res) => {
 // about us ka page
 
 router.get('/about',authenticate,(req,res)=>{
+    console.log(req.body);
+    res.json ({message: "awesome"});
     res.send (req.rootUser);
 });
 
 router.get('/getdata',authenticate,(req,res)=>{
+    console.log(req.body);
+    res.json ({message: "awesome"});
     res.send (req.rootUser);
 });
 
