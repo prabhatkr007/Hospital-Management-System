@@ -89,12 +89,12 @@ router.post('/signin', async (req ,res) => {
         if(userLogin){
             const isMatch = await bcrypt.compare(password,userLogin.password);
         
-            const token = await userLogin.generateAuthToken();
+            // const token = await userLogin.generateAuthToken();
             
-            res.cookie("jwtoken", token, {
-                expires:new Date(Date.now() + 25892000000),
-                httpOnly:true
-            });
+            // res.cookie("jwtoken", token, {
+            //     expires:new Date(Date.now() + 25892000000),
+            //     httpOnly:true
+            // });
 
         if(isMatch){
 
@@ -118,13 +118,13 @@ router.post('/signin', async (req ,res) => {
 
 // about us ka page
 
-router.get('/about',authenticate,(req,res)=>{
+router.get('/about',(req,res)=>{
     console.log(req.body);
     res.json ({message: "awesome"});
     res.send (req.rootUser);
 });
 
-router.get('/getdata',authenticate,(req,res)=>{
+router.get('/getdata',(req,res)=>{
     console.log(req.body);
     res.json ({message: "awesome"});
     res.send (req.rootUser);
