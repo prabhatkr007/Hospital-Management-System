@@ -120,14 +120,15 @@ router.post('/signin', async (req ,res) => {
 
 router.get('/about',authenticate,(req,res)=>{
     console.log(req.body);
-    res.json ({message: "awesome"});
     res.send (req.rootUser);
+    res.json ({message: "awesome"})
 });
 
 router.get('/getdata', authenticate,(req,res)=>{
     console.log(req.body);
-    res.json ({message: "awesome"});
+    
     res.send (req.rootUser);
+    res.json ({message: "awesome"});
 });
 
 
