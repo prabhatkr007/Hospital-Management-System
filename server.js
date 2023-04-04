@@ -48,5 +48,5 @@ app.get('/signup', (req,res)=>{
 
 
 app.listen(PORT, () => {
-  console.log(`Server is running at${port}`);
+  console.log(`Server is running at${PORT}`);
 })
