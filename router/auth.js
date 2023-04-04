@@ -77,7 +77,7 @@ router.post('/register' , (req, res) => {
 
 router.post('/signin', async (req ,res) => {
     console.log(req.body);
-    res.json ({message: "awesome"});
+   
     try{
         const {email, password} = req.body;
         if(!email|| !password){
@@ -89,18 +89,20 @@ router.post('/signin', async (req ,res) => {
         if(userLogin){
             const isMatch = await bcrypt.compare(password,userLogin.password);
         
+           
+
+        if(isMatch){
             const token = await userLogin.generateAuthToken();
             
             res.cookie("jwtoken", token, {
                 expires:new Date(Date.now() + 25892000000),
                 httpOnly:true
             });
+            
+            res.json({message:"user signin successful"});
+            } 
 
-        if(isMatch){
-
-                res.json({message:"user signin successful"});
-
-            } else{
+            else{
                 res.status(400).json({error:"Invalid credientials"});
             }
         } else{
