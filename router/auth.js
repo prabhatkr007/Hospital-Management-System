@@ -81,50 +81,23 @@ router.post('/register', [
   });
 // Login route
 
-router.post('/signin', async (req ,res) => {
-    console.log(req.body);
-   
-    try{
-        const {email, password} = req.body;
-        if(!email|| !password){
-            return res.status(400).json({error:"plz fill the data"});
-        }
-
-        const userLogin = await User.findOne({email:email});
-
-        if(userLogin){
-            const isMatch = await bcrypt.compare(password,userLogin.password);
-        
-           
-
-        if(isMatch){
-            const token = await userLogin.generateAuthToken();
+router.post('/signin', async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(401).json({ error: 'Invalid credentials' });
+  }
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    return res.status(401).json({ error: 'Invalid credentials' });
+  }
             
-            // Save the token in localStorage
-            localStorage.setItem('jwt', token);
-
-            res.cookie("jwtoken", token, {
-                expires:new Date(Date.now() + 25892000000),
-                httpOnly:true
-            });
-
-            res.json({message:"user signin successful"});
-            } 
-
-            else{
-                res.status(400).json({error:"Invalid credientials"});
-            }
-        } else{
-            res.status(400).json({error:"Invalid credientials."});
-        }
-    
-
-       
-        
-
-    } catch(err){
-        console.log(err);
-    }
+  const token = await user.generateAuthToken();
+  res.cookie("jwtoken", token, {
+    expires:new Date(Date.now() + 25892000000),
+    httpOnly:true
+  });
+  res.json({ message: 'User signed in successfully', token });
 });
 
 
