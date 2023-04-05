@@ -12,7 +12,7 @@ dotenv.config({path: './config.env'});
 require('./DB/conn.js');
 
 app.use(cors({ 
-    origin: '*',
+    origin: 'https://mernproject-backend.onrender.com',
     methods: ['GET', 'PUT', 'POST'], 
     allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token'], 
     credentials: true, 
