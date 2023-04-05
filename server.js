@@ -19,6 +19,7 @@ app.use(cors({
     maxAge: 600, 
     exposedHeaders: ['*', 'Authorization' ] 
   }));
+  app.options('*', cors());
 app.use(express.json());
 
 app.use(require('./router/auth'));
