@@ -1,36 +1,33 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/userSchema");
 
-const Authentication = async (req, res, next) => {
-  try {
-    const token = req.cookies.jwtoken;
-    console.log(token);
-
-    if (!token) {
-      throw new Error("no token found");
+const authenticate = async (req, res, next) => {
+    try {
+      // Get the JWT token from the Authorization header
+      const authHeader = req.headers.authorization;
+      if (!authHeader) {
+        throw new Error("Authorization header missing");
+      }
+      const token = authHeader.replace("Bearer ", "");
+  
+      // Verify the JWT token
+      const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+      const userId = decodedToken.userId;
+  
+      // Find the user associated with the token
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new Error("User not found");
+      }
+  
+      // Attach the token and user to the request object
+      req.token = token;
+      req.user = user;
+  
+      next();
+    } catch (err) {
+      res.status(401).json({ error: err.message });
     }
-
-    const verifyToken = jwt.verify(token, process.env.SECRET_KEY);
-    console.log(verifyToken);
-
-    const rootUser = await User.findOne({
-      _id: verifyToken._id,
-      "tokens.token": token,
-    });
-
-    if (!rootUser) {
-      throw new Error("user not found");
-    }
-
-    req.token = token;
-    req.rootUser = rootUser;
-    req.userID = rootUser._id;
-
-    next();
-  } catch (err) {
-    res.status(401).send(err.message);
-    console.log(err);
-  }
-};
-
-module.exports = Authentication;
+  };
+  
+  module.exports = authenticate;
