@@ -4,7 +4,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const authenticate = require('../middleware/atc');
-
+const { body, validationResult } = require('express-validator');
 require('../DB/conn');
 
 const User = require("../models/userSchema");
@@ -15,64 +15,70 @@ const User = require("../models/userSchema");
 
 // Promise method
 
-router.post('/register' , (req, res) => {
-    const { name, email, phone, work, password, cpassword } = req.body;
-
-    if( !name || ! email || ! phone || ! work|| ! password || !cpassword ){
-        return res.status(422).json({error: "plz fill the filled properly" });
-    }
-    
-    User.findOne({email: email})
-    .then((userExist) => {
-        if (userExist){
-            return res.status(422).json({ error: "Email already exist"});
-        }
-    
-    const user = new User({name, email, phone, work, password, cpassword });
-
-    user.save().then( () => {
-        res.status(201).json({ message: "user registered successfully"});
-    }).catch((err) => res.status(500).json({ error: "Failed to register"}));
-}).catch(( err => { console.log(err); }));
-    
-});
-
-//Async-await mehod
-
-// router.post('/register' , async (req, res) => {
+// router.post('/register' , (req, res) => {
 //     const { name, email, phone, work, password, cpassword } = req.body;
 
 //     if( !name || ! email || ! phone || ! work|| ! password || !cpassword ){
 //         return res.status(422).json({error: "plz fill the filled properly" });
 //     }
-
-//     try{
-//         const userExist = await User.findOne({ email: email });
-
+    
+//     User.findOne({email: email})
+//     .then((userExist) => {
 //         if (userExist){
 //             return res.status(422).json({ error: "Email already exist"});
-//         }else if(password != cpassword){
-//             return res.status(422).json({ error: 'password are not matching'});
 //         }
     
-//     else{
 //     const user = new User({name, email, phone, work, password, cpassword });
 
-//     const userRegister = await user.save();
-
-//     if (userRegister){
+//     user.save().then( () => {
 //         res.status(201).json({ message: "user registered successfully"});
-//     }else{
-//         res.status(500).json({ error: "Failed to register"});
-//     }
-// }
-       
-// }catch(err){
-//     console.log(err);
-// }
-
+//     }).catch((err) => res.status(500).json({ error: "Failed to register"}));
+// }).catch(( err => { console.log(err); }));
+    
 // });
 
+//Async-await mehod
+
+router.post('/register', [
+    body('name').notEmpty().withMessage('Name is required'),
+    body('email').isEmail().withMessage('Invalid email'),
+    body('phone').isNumeric().withMessage('Phone must be numeric'),
+    body('work').notEmpty().withMessage('Work is required'),
+    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+    body('cpassword').custom((value, { req }) => {
+      if (value !== req.body.password) {
+        throw new Error('Password confirmation does not match password');
+      }
+      return true;
+    }),
+  ], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+  
+    const { name, email, phone, work, password, cpassword } = req.body;
+  
+    try {
+      const userExist = await User.findOne({ email: email });
+  
+      if (userExist) {
+        return res.status(422).json({ error: "Email already exists" });
+      } else {
+        const user = new User({ name, email, phone, work, password, cpassword });
+  
+        const userRegister = await user.save();
+  
+        if (userRegister) {
+          res.status(201).json({ message: "User registered successfully" });
+        } else {
+          res.status(500).json({ error: "Failed to register" });
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  });
 // Login route
 
 router.post('/signin', async (req ,res) => {
@@ -94,11 +100,14 @@ router.post('/signin', async (req ,res) => {
         if(isMatch){
             const token = await userLogin.generateAuthToken();
             
+            // Save the token in localStorage
+            localStorage.setItem('jwt', token);
+
             res.cookie("jwtoken", token, {
                 expires:new Date(Date.now() + 25892000000),
                 httpOnly:true
             });
-            
+
             res.json({message:"user signin successful"});
             } 
 
@@ -117,6 +126,7 @@ router.post('/signin', async (req ,res) => {
         console.log(err);
     }
 });
+
 
 // about us ka page
 
