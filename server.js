@@ -2,7 +2,7 @@ const dotenv = require("dotenv");
 const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require('cookie-parser');
-
+const cors = require('cors');
 const app = express();
 
 app.use(cookieParser());
@@ -11,6 +11,14 @@ dotenv.config({path: './config.env'});
 
 require('./DB/conn.js');
 
+app.use(cors({ 
+    origin: '*',
+    methods: ['GET', 'PUT', 'POST'], 
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token'], 
+    credentials: true, 
+    maxAge: 600, 
+    exposedHeaders: ['*', 'Authorization' ] 
+  }));
 app.use(express.json());
 
 app.use(require('./router/auth'));

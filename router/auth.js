@@ -95,7 +95,9 @@ router.post('/signin', async (req, res) => {
   const token = await user.generateAuthToken();
   res.cookie("jwtoken", token, {
     expires:new Date(Date.now() + 25892000000),
-    httpOnly:true
+    secure: true, // set to true if your using https or samesite is none
+    httpOnly: true, // backend only
+    sameSite: 'none' // set to none for cross-request
   });
   res.json({ message: 'User signed in successfully', token });
 });
