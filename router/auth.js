@@ -121,7 +121,12 @@ router.get('/getdata', authenticate,(req,res)=>{
 
 
 router.get('/signout',authenticate,(req,res)=>{
-    res.clearCookie('jwtoken',{path:'/'});
+  res.clearCookie('jwtoken', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none', 
+    path:'/', 
+    domain: 'mernproject-backend.onrender.com'});
     req.User.save;
     res.json({ message: 'User logout successfully', token });
     
