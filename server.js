@@ -60,6 +60,7 @@ app.get('/signout', (req,res)=>{
         sameSite: 'none', 
         path:'/', 
         domain: 'mernproject-backend.onrender.com'});
+        
     res.json({ message: 'User logout successfully'});
 
 });
