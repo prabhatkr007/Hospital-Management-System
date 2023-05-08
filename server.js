@@ -54,9 +54,9 @@ app.get('/signin', (req,res)=>{
 });
 
 app.get('/signout', (req,res)=>{
-    res.clearCookie('jwtoken');
-    res.json({ message: 'User logout successfully', token });
-    res.send ('hello signup world')
+    res.clearCookie('auth-jwtoken', {httpOnly: true, path:'/', domain: 'https://mernproject-frontend.onrender.com'});
+    res.json({ message: 'User logout successfully'});
+
 });
 
 
