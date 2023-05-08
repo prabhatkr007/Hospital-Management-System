@@ -59,8 +59,8 @@ app.get('/signout', (req,res)=>{
         secure: true,
         sameSite: 'none', 
         path:'/', 
-        domain: 'mernproject-backend.onrender.com'});
-        
+        domain: 'https://mernproject-backend.onrender.com'});
+
     res.json({ message: 'User logout successfully'});
 
 });
