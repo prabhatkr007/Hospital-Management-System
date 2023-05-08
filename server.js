@@ -19,7 +19,7 @@ app.use(cors({
     maxAge: 600, 
     exposedHeaders: ['*', 'Authorization' ] 
   }));
-  app.options('*', cors());
+app.options('*', cors());
 app.use(express.json());
 
 app.use(require('./router/auth'));
@@ -53,7 +53,9 @@ app.get('/signin', (req,res)=>{
     res.send ('hello sigin world')
 });
 
-app.get('/signup', (req,res)=>{
+app.get('/signout', (req,res)=>{
+    res.clearCookie('jwtoken',{path:'/'});
+    res.json({ message: 'User logout successfully', token });
     res.send ('hello signup world')
 });
 
