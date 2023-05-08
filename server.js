@@ -54,7 +54,7 @@ app.get('/signin', (req,res)=>{
 });
 
 app.get('/signout', (req,res)=>{
-    res.clearCookie('jwtoken',{path:'/'});
+    res.clearCookie('jwtoken');
     res.json({ message: 'User logout successfully', token });
     res.send ('hello signup world')
 });
