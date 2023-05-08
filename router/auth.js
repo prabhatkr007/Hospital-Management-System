@@ -120,8 +120,9 @@ router.get('/getdata', authenticate,(req,res)=>{
 
 
 
-router.get('/logout',(req,res)=>{
+router.get('/signout',authenticate,(req,res)=>{
     res.clearCookie('jwtoken',{path:'/'});
+    req.User.save;
     res.json({ message: 'User logout successfully', token });
     
 });
