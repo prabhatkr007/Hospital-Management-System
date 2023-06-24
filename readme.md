@@ -9,7 +9,7 @@ Note: You must have mongodb installed in your local machine for the project to r
 To get the project running in your machine use the following code:
 
 ```shell
-git clone https://github.com/prabhatkr007/Hospital-Management-System
+git clone https://github.com/CEPHAL0/Hospital-Management-System
 npm install
 npm start
 ```
